@@ -336,7 +336,15 @@
         -1 means system internal default value is used. -->
     <integer name="def_battery_charging_state_enforce_level">-1</integer>
 
+
     <bool name="def_text_show_password">false</bool>
 
     <integer name="def_ota_disable_automatic_update">1</integer>
+
+    <!-- Value to use as default scale for fonts -->
+    <item name="def_device_font_scale" format="float" type="dimen">1.0</item>
+
+    <!-- Default for Settings.Global.TETHER_DUN_REQUIRED -->
+    <integer name="def_tether_dun_required">0</integer>
+
 </resources>

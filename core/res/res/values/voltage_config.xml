@@ -26,4 +26,11 @@
     <!-- Whether device supports an alt. ambient display -->
     <bool name="config_alt_ambient_display">false</bool>
 
+    <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
+    <java-symbol type="string" name="config_netflixSpoofModel" />
+
+    <!-- AttestationHooks -->
+    <java-symbol type="array" name="config_certifiedBuildProperties" />
+    <java-symbol type="string" name="config_stockFingerprint" />
+
 </resources>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2023 VoltageOS
+     Copyright (C) 2024 VoltageOS
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-
     <!-- Whether usage of the proximity sensor during doze is supported -->
     <bool name="doze_proximity_sensor_supported">true</bool>
 
@@ -31,4 +30,9 @@
     <!-- Preferred max refresh rate at AOD & Ambient Display, if supported by the display. -->
     <integer name="config_aodMaxRefreshRate">-1</integer>
 
+    <!-- Whether to enable burn-in protection for statusbar and navbar -->
+    <bool name="config_statusBarBurnInProtection">@*android:bool/config_enableBurnInProtection</bool>
+
+    <!-- Interval between subsequent shifting of statusbar and navbar contents, in seconds -->
+    <integer name="config_statusBarBurnInProtectionShiftInterval">60</integer>
 </resources>

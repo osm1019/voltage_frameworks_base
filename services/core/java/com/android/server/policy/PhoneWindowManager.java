@@ -221,6 +221,7 @@ import com.android.internal.policy.PhoneWindow;
 import com.android.internal.policy.TransitionAnimation;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.internal.util.voltage.VoltageUtils;
 import com.android.server.AccessibilityManagerInternal;
 import com.android.server.ExtconStateObserver;
 import com.android.server.ExtconUEventObserver;
@@ -566,7 +567,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mShouldEarlyShortPressOnPower;
     boolean mShouldEarlyShortPressOnStemPrimary;
     int mLongPressOnPowerBehavior;
-    long mLongPressOnPowerAssistantTimeoutMs;
+    private boolean mTorchLongPressPowerEnabled;
+    long mLongPressOnPowerTimeoutMs;
     int mVeryLongPressOnPowerBehavior;
     int mDoublePressOnPowerBehavior;
     ComponentName mPowerDoublePressTargetActivity;
@@ -981,7 +983,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_ENABLE_POWER_MENU), true, this,
                     UserHandle.USER_ALL);
-
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.TORCH_LONG_PRESS_POWER), false, this,
+                    UserHandle.USER_ALL);
             updateSettings();
         }
 
@@ -1518,6 +1522,25 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mPocketManager.setListeningExternal(false);
                 break;
         }
+    }
+
+    private boolean powerLongPressGestures(long eventTime, boolean nonInteractive) {
+        if (DEBUG_INPUT) Slog.d(TAG, "powerLongPressGestures: eventTime = " + eventTime
+                + ", nonInteractive = " + nonInteractive +
+                ", mTorchLongPressPowerEnabled = " + mTorchLongPressPowerEnabled);
+        if (mTorchLongPressPowerEnabled && (nonInteractive || isFlashlightOn())) {
+            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, false,
+                    "Power - Long Press - Toggle flashlight");
+            VoltageUtils.toggleCameraFlash();
+            mPowerKeyHandled = true;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFlashlightOn() {
+        return Settings.Secure.getInt(mContext.getContentResolver(),
+            Settings.Secure.FLASHLIGHT_ENABLED, 0) == 1;
     }
 
     private void powerVeryLongPress() {
@@ -2469,7 +2492,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mLongPressOnPowerBehavior = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_longPressOnPowerBehavior);
-        mLongPressOnPowerAssistantTimeoutMs = mContext.getResources().getInteger(
+        mLongPressOnPowerTimeoutMs = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_longPressOnPowerDurationMs);
         mVeryLongPressOnPowerBehavior = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_veryLongPressOnPowerBehavior);
@@ -2789,8 +2812,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         @Override
         long getLongPressTimeoutMs() {
-            if (getResolvedLongPressOnPowerBehavior() == LONG_PRESS_POWER_ASSISTANT) {
-                return mLongPressOnPowerAssistantTimeoutMs;
+            if (getResolvedLongPressOnPowerBehavior() == LONG_PRESS_POWER_ASSISTANT
+                    || mTorchLongPressPowerEnabled) {
+                return mLongPressOnPowerTimeoutMs;
             } else {
                 return super.getLongPressTimeoutMs();
             }
@@ -2798,11 +2822,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         @Override
         void onLongPress(long eventTime) {
-            if (mSingleKeyGestureDetector.beganFromNonInteractive()
-                    && !mSupportLongPressPowerWhenNonInteractive) {
+            final boolean nonInteractive = mSingleKeyGestureDetector.beganFromNonInteractive();
+            if (nonInteractive && !mSupportLongPressPowerWhenNonInteractive) {
                 Slog.v(TAG, "Not support long press power when device is not interactive.");
                 return;
             }
+            if (powerLongPressGestures(eventTime, nonInteractive)) return;
 
             powerLongPress(eventTime);
         }
@@ -3087,7 +3112,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mVeryLongPressOnPowerBehavior = veryLongPressOnPowerBehavior;
             }
 
-            mLongPressOnPowerAssistantTimeoutMs = Settings.Global.getLong(
+            mLongPressOnPowerTimeoutMs = Settings.Global.getLong(
                     mContext.getContentResolver(),
                     Settings.Global.POWER_BUTTON_LONG_PRESS_DURATION_MS,
                     mContext.getResources().getInteger(
@@ -3133,6 +3158,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mGlobalActionsOnLockEnable = Settings.System.getIntForUser(resolver,
                     Settings.System.LOCKSCREEN_ENABLE_POWER_MENU, 1,
                     UserHandle.USER_CURRENT) != 0;
+
+            mTorchLongPressPowerEnabled = Settings.Secure.getIntForUser(resolver,
+                    Settings.Secure.TORCH_LONG_PRESS_POWER, 0,
+                    UserHandle.USER_CURRENT) == 1;
 
             final boolean kidsModeEnabled = Settings.Secure.getIntForUser(resolver,
                     Settings.Secure.NAV_BAR_KIDS_MODE, 0, UserHandle.USER_CURRENT) == 1;
@@ -6856,8 +6885,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         pw.print("mShortPressOnSettingsBehavior=");
         pw.println(shortPressOnSettingsBehaviorToString(mShortPressOnSettingsBehavior));
         pw.print(prefix);
-        pw.print("mLongPressOnPowerAssistantTimeoutMs=");
-        pw.println(mLongPressOnPowerAssistantTimeoutMs);
+                pw.print("mTorchLongPressPowerEnabled=");
+                pw.println(String.valueOf(mTorchLongPressPowerEnabled));
+        pw.print(prefix);
+        pw.print("mLongPressOnPowerTimeoutMs=");
+        pw.println(mLongPressOnPowerTimeoutMs);
         pw.print(prefix);
                 pw.print("mVeryLongPressOnPowerBehavior=");
                 pw.println(veryLongPressOnPowerBehaviorToString(mVeryLongPressOnPowerBehavior));

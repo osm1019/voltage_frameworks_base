@@ -13266,6 +13266,13 @@ public final class Settings {
          */
         public static final String VPN_ENFORCE_DNS_STORE = "vpn_enforce_dns_store";
 
+	/**
+         * Whether to show QS auto brightness toggle button
+         * @hide
+         */
+        @Readable
+        public static final String QSTILE_REQUIRES_UNLOCKING = "qstile_requires_unlocking";
+
         /**
          * Whether key swap is enabled on supported hardware
          * @hide

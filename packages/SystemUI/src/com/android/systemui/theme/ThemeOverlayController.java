@@ -67,6 +67,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.internal.graphics.ColorUtils;
+import com.android.internal.voltage.app.ParallelSpaceManager;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -390,7 +391,12 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean newProfile = Intent.ACTION_PROFILE_ADDED.equals(intent.getAction());
-            if (newProfile) {
+            boolean isParallelSpace =
+                    Intent.ACTION_PARALLEL_SPACE_CHANGED.equals(intent.getAction());
+            if (isParallelSpace) {
+                if (DEBUG) Log.d(TAG, "Updating overlays for user switch / profile added.");
+                reevaluateSystemTheme(true /* forceReload */);
+            } else if (newProfile) {
                 UserHandle newUserHandle = intent.getParcelableExtra(Intent.EXTRA_USER,
                         android.os.UserHandle.class);
                 boolean isManagedProfile =
@@ -469,8 +475,10 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
     public void start() {
         if (DEBUG) Log.d(TAG, "Start");
         final IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_MANAGED_PROFILE_ADDED);
         filter.addAction(Intent.ACTION_PROFILE_ADDED);
         filter.addAction(Intent.ACTION_WALLPAPER_CHANGED);
+        filter.addAction(Intent.ACTION_PARALLEL_SPACE_CHANGED);
         mBroadcastDispatcher.registerReceiver(mBroadcastReceiver, filter, mMainExecutor,
                 UserHandle.ALL);
         mSecureSettings.registerContentObserverForUser(
@@ -932,6 +940,7 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
             }
         }
 
+        managedProfiles.addAll(ParallelSpaceManager.getInstance().getParallelUserHandles());
         boolean nightMode = (mContext.getResources().getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
         boolean isBlackTheme = mSecureSettings.getInt(Settings.Secure.SYSTEM_BLACK_THEME, 0) == 1

@@ -27,10 +27,12 @@
     <bool name="config_alt_ambient_display">false</bool>
 
     <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
-    <java-symbol type="string" name="config_netflixSpoofModel" />
+    <string name="config_netflixSpoofModel" translatable="false"></string>
 
-    <!-- AttestationHooks -->
-    <java-symbol type="array" name="config_certifiedBuildProperties" />
-    <java-symbol type="string" name="config_stockFingerprint" />
+    <!-- Build fingerprint from the stock ROM -->
+    <string name="config_stockFingerprint" translatable="false"></string>
+
+    <!-- Whether Pixel props is enabled -->
+    <bool name="config_enablePixelProps">true</bool>
 
 </resources>

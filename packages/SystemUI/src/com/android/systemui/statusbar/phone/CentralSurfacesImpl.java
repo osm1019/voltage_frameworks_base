@@ -144,6 +144,7 @@ import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.keyguard.shared.KeyguardShadeMigrationNssl;
 import com.android.systemui.keyguard.ui.binder.LightRevealScrimViewBinder;
 import com.android.systemui.keyguard.ui.viewmodel.LightRevealScrimViewModel;
+import com.android.systemui.model.SysUiState;
 import com.android.systemui.navigationbar.NavigationBarController;
 import com.android.systemui.navigationbar.NavigationBarView;
 import com.android.systemui.notetask.NoteTaskController;
@@ -452,7 +453,6 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     private final StatusBarSignalPolicy mStatusBarSignalPolicy;
     private final StatusBarHideIconsForBouncerManager mStatusBarHideIconsForBouncerManager;
     private final Lazy<LightRevealScrimViewModel> mLightRevealScrimViewModelLazy;
-
     /** Controller for the Shade. */
     private final ShadeSurface mShadeSurface;
     private final ShadeLogger mShadeLogger;
@@ -604,6 +604,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     private final InteractionJankMonitor mJankMonitor;
 
     private final SceneContainerFlags mSceneContainerFlags;
+    
+    private final SysUiState  mSysUiState;
 
     private final BurnInProtectionController mBurnInProtectionController;
 
@@ -723,6 +725,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
             Provider<FingerprintManager> fingerprintManager,
             ActivityStarter activityStarter,
             SceneContainerFlags sceneContainerFlags,
+            SysUiState sysUiState,
             BurnInProtectionController burnInProtectionController
     ) {
         mContext = context;
@@ -822,6 +825,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
         mFingerprintManager = fingerprintManager;
         mActivityStarter = activityStarter;
         mSceneContainerFlags = sceneContainerFlags;
+        mSysUiState = sysUiState;
         mPulseController = new PulseControllerImpl(mContext, this,
                 mCommandQueue, mUiBgExecutor, mConfigurationController);
 

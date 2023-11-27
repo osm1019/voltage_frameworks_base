@@ -561,13 +561,6 @@ public class CentralSurfacesCommandQueueCallbacks implements CommandQueue.Callba
         return VibrationEffect.createWaveform(timings, /* repeat= */ -1);
     }
 
-    @Override
-    public void toggleCameraFlash() {
-        if (mFlashlightController.isAvailable()) {
-            mFlashlightController.setFlashlight(!mFlashlightController.isEnabled());
-        }
-    }
-
     @VisibleForTesting
     void vibrateOnNavigationKeyDown() {
         mShadeViewController.performHapticFeedback(

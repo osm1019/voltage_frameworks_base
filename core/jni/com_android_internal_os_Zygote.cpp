@@ -1957,7 +1957,7 @@ static void SpecializeCommon(JNIEnv* env, uid_t uid, gid_t gid, jintArray gids, 
 
     // If this zygote isn't root, it won't be able to create a process group,
     // since the directory is owned by root.
-    if (!is_system_server && getuid() == 0) {
+    if (getuid() == 0) {
         const int rc = createProcessGroup(uid, getpid());
         if (rc != 0) {
 #if 0

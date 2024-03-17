@@ -1169,8 +1169,12 @@ Todo: android.provider.ContactsContract.RawContacts#newEntityIterator(android.da
     Documentation mentions 'TODO'
 
 
+UnflaggedApi: android.Manifest.permission#FAKE_PACKAGE_SIGNATURE:
+    New API must be flagged with @FlaggedApi: field android.Manifest.permission.FAKE_PACKAGE_SIGNATURE
 UnflaggedApi: android.Manifest.permission#OTHER_SENSORS:
     New API must be flagged with @FlaggedApi: field android.Manifest.permission.OTHER_SENSORS
+UnflaggedApi: android.Manifest.permission_group#FAKE_PACKAGE:
+    New API must be flagged with @FlaggedApi: field android.Manifest.permission_group.FAKE_PACKAGE
 UnflaggedApi: android.Manifest.permission_group#NETWORK:
     New API must be flagged with @FlaggedApi: field android.Manifest.permission_group.NETWORK
 UnflaggedApi: android.Manifest.permission_group#OTHER_SENSORS:
@@ -1505,6 +1509,8 @@ UnflaggedApi: android.os.PerformanceHintManager.Session#setPreferPowerEfficiency
     New API must be flagged with @FlaggedApi: method android.os.PerformanceHintManager.Session.setPreferPowerEfficiency(boolean)
 UnflaggedApi: android.os.UserManager#DISALLOW_NEAR_FIELD_COMMUNICATION_RADIO:
     New API must be flagged with @FlaggedApi: field android.os.UserManager.DISALLOW_NEAR_FIELD_COMMUNICATION_RADIO
+UnflaggedApi: android.os.storage.StorageManager#inCryptKeeperBounce():
+    New API must be flagged with @FlaggedApi: method android.os.storage.StorageManager.inCryptKeeperBounce()
 UnflaggedApi: android.provider.Settings#ACTION_CREDENTIAL_PROVIDER:
     New API must be flagged with @FlaggedApi: field android.provider.Settings.ACTION_CREDENTIAL_PROVIDER
 UnflaggedApi: android.telecom.Call.Details#getId():

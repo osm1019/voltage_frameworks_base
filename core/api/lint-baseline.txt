@@ -1509,8 +1509,6 @@ UnflaggedApi: android.os.PerformanceHintManager.Session#setPreferPowerEfficiency
     New API must be flagged with @FlaggedApi: method android.os.PerformanceHintManager.Session.setPreferPowerEfficiency(boolean)
 UnflaggedApi: android.os.UserManager#DISALLOW_NEAR_FIELD_COMMUNICATION_RADIO:
     New API must be flagged with @FlaggedApi: field android.os.UserManager.DISALLOW_NEAR_FIELD_COMMUNICATION_RADIO
-UnflaggedApi: android.os.storage.StorageManager#inCryptKeeperBounce():
-    New API must be flagged with @FlaggedApi: method android.os.storage.StorageManager.inCryptKeeperBounce()
 UnflaggedApi: android.provider.Settings#ACTION_CREDENTIAL_PROVIDER:
     New API must be flagged with @FlaggedApi: field android.provider.Settings.ACTION_CREDENTIAL_PROVIDER
 UnflaggedApi: android.telecom.Call.Details#getId():

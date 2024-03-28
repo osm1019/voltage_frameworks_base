@@ -2573,7 +2573,9 @@ public class PackageImpl implements ParsedPackage, AndroidPackageInternal,
 
     public ApplicationInfo toAppInfoWithoutStateWithoutFlags() {
         ApplicationInfo appInfo = new ApplicationInfo();
+    if (ext != null) {
         appInfo.setExt(ext.toAppInfoExt(this));
+}
 
         // Lines that are commented below are state related and should not be assigned here.
         // They are left in as placeholders, since there is no good backwards compatible way to

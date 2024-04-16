@@ -947,12 +947,6 @@ public class ThemeOverlayController implements CoreStartable, Dumpable {
                                 && nightMode;
         mThemeManager.setIsBlackTheme(isBlackTheme);
 
-        if (colorSchemeIsApplied(managedProfiles) 
-                && !mThemeManager.shouldApplyBlackThemeNow()) {
-            Log.d(TAG, "Skipping overlay creation. Theme was already: " + mColorScheme);
-            return;
-        }
-
         if (DEBUG) {
             Log.d(TAG, "Applying overlays: " + categoryToPackage.keySet().stream()
                     .map(key -> key + " -> " + categoryToPackage.get(key)).collect(

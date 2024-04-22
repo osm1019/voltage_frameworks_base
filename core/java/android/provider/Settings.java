@@ -13002,12 +13002,6 @@ public final class Settings {
         public static final String HBM_SETTING_KEY =
                 "com.android.server.display.HBM_SETTING_KEY";
 
-        /**
-         * Whether to turn on black theme
-         * @hide
-         */
-        public static final String SYSTEM_BLACK_THEME = "system_black_theme";
-
 	/**
          * Whether to show privacy indicator for location
          * @hide

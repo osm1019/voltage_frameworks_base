@@ -289,6 +289,10 @@ public class InternetDialogController implements AccessPointController.AccessPoi
     }
 
     void onStart(@NonNull InternetDialogCallback callback, boolean canConfigWifi) {
+        onStart(callback, canConfigWifi, false);
+    }
+
+    void onStart(@NonNull InternetDialogCallback callback, boolean canConfigWifi, boolean isAutoOn) {
         if (DEBUG) {
             Log.d(TAG, "onStart");
         }
@@ -320,6 +324,8 @@ public class InternetDialogController implements AccessPointController.AccessPoi
         }
         mCanConfigWifi = canConfigWifi;
         scanWifiAccessPoints();
+
+        if (isAutoOn && !isWifiEnabled()) setWifiEnabled(true);
     }
 
     void onStop() {

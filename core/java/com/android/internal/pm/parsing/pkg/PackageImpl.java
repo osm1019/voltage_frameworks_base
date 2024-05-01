@@ -3808,7 +3808,7 @@ public class PackageImpl implements ParsedPackage, AndroidPackageInternal,
         gosPackageStateCachedDerivedFlags = value;
     }
 
-    private PackageParsingHooks packageParsingHooks;
+    private PackageParsingHooks packageParsingHooks = PackageParsingHooks.DEFAULT;
 
     public static Function<String, PackageParsingHooks> packageParsingHooksSupplier;
 

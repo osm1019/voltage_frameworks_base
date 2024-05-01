@@ -3823,7 +3823,7 @@ public class PackageImpl implements ParsedPackage, AndroidPackageInternal,
         return packageParsingHooks;
     }
 
-    private PackageExtIface ext;
+    private PackageExtIface ext = PackageExtDefault.INSTANCE;
 
     @Override
     public void setPackageExt(@Nullable PackageExtIface ext) {

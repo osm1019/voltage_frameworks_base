@@ -6569,11 +6569,6 @@ public final class Settings {
         public static final String NOTIFICATION_GUTS_KILL_APP_BUTTON =
                 "notification_guts_kill_app_button";
 
-        /**
-         * Whether to show or hide alert slider notifications on supported devices
-         * @hide
-         */
-        public static final String ALERT_SLIDER_NOTIFICATIONS = "alert_slider_notifications";
 
         /**
          * @hide
